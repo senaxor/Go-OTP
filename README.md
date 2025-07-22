@@ -30,5 +30,5 @@ docker run -d --name mongo -p 27017:27017 mongo
 ```
 
 ```bash
-    docker-compose up --build
+docker-compose up --build
 ```
