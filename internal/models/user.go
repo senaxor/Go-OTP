@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -23,7 +24,8 @@ func InitUserCollection(db *mongo.Database) {
 }
 
 func FindOrCreateUser(phone string) (*User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	log.Printf("here_1")
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
 	// Check if user already exists
@@ -32,15 +34,22 @@ func FindOrCreateUser(phone string) (*User, error) {
 	if err == nil {
 		return &user, nil // found
 	}
+
+	log.Printf(err.Error())
 	if err != mongo.ErrNoDocuments {
 		return nil, err // DB error
 	}
+
+	log.Printf("here_2")
 
 	// Create new user
 	newUser := User{
 		Phone:     phone,
 		CreatedAt: time.Now(),
 	}
+
+
+	log.Printf("here_3")
 
 	res, err := userCollection.InsertOne(ctx, newUser)
 	if err != nil {

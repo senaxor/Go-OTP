@@ -3,6 +3,7 @@ package database
 import (
     "context"
     "log"
+    "os"
     "time"
 
     "go.mongodb.org/mongo-driver/mongo"
@@ -17,7 +18,12 @@ func InitDB() {
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
-    clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+    mongoURI := os.Getenv("MONGO_URI")
+    if mongoURI == "" {
+        mongoURI = "mongodb://localhost:27017" // fallback for local dev
+    }
+
+    clientOptions := options.Client().ApplyURI(mongoURI)
     client, err := mongo.Connect(ctx, clientOptions)
     if err != nil {
         log.Fatal("MongoDB connection failed:", err)

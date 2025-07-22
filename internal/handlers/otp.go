@@ -36,7 +36,7 @@ func RequestOTP(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
-		"message": "OTP generated (check logs)",
+		"message": "OTP generated (check logs)", // sms in production
 	})
 }
 
@@ -54,6 +54,7 @@ func VerifyOTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf(req.Phone)
 	user, err := models.FindOrCreateUser(req.Phone)
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)

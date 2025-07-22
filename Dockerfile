@@ -1,9 +1,9 @@
 FROM golang:1.24
 
 WORKDIR /app
-COPY . .
+COPY go.mod go.sum ./
 ENV GOPROXY=https://goproxy.io,direct
-RUN go mod tidy
-RUN go build -o server ./cmd/server
+RUN go mod download
 
-CMD ["./server"]
+# The source code will be mounted at runtime, so no COPY . .
+CMD ["go", "run", "./cmd/server/main.go"]
