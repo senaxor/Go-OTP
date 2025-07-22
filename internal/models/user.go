@@ -68,3 +68,19 @@ func GetUserByID(id string) (*User, error) {
 
 	return &user, nil
 }
+
+func GetAllUsers() ([]User, error) {
+	ctx := context.TODO()
+	cursor, err := userCollection.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var users []User
+	if err := cursor.All(ctx, &users); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

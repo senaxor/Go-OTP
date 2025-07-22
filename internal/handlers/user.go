@@ -24,3 +24,14 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(user)
 }
+
+func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := models.GetAllUsers()
+	if err != nil {
+		http.Error(w, "Failed to fetch userss", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
