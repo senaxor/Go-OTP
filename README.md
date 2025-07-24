@@ -24,11 +24,10 @@ Go-OTP is a high-performance, containerized One-Time Password (OTP) generator an
 ## 🛠️ Getting Started
 
 ### 1. Start MongoDB container:
-
-```bash
-docker run -d --name mongo -p 27017:27017 mongo
-```
-
 ```bash
 docker-compose up --build
 ```
+
+## Swagger
+visit
+http://localhost:8080/swagger/index.html
