@@ -24,7 +24,16 @@ type OTPVerifyRequest struct {
 	OTP   string `json:"otp"`
 }
 
-// POST /otp/request
+// RequestOTP godoc
+// @Summary Request an OTP
+// @Description Send an OTP to the user's phone
+// @Tags OTP
+// @Accept  json
+// @Produce  json
+// @Param request body OTPRequest true "Phone number"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /otp/request [post]
 func RequestOTP(w http.ResponseWriter, r *http.Request) {
 	var req OTPRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -51,7 +60,7 @@ func RequestOTP(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// POST /otp/verify
+
 func VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	var req OTPVerifyRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

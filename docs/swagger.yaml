@@ -1,0 +1,47 @@
+basePath: /
+definitions:
+  handlers.OTPRequest:
+    properties:
+      phone:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for sending and verifying OTP codes
+  title: OTP Verification API
+  version: "1.0"
+paths:
+  /otp/request:
+    post:
+      consumes:
+      - application/json
+      description: Send an OTP to the user's phone
+      parameters:
+      - description: Phone number
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.OTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Request an OTP
+      tags:
+      - OTP
+schemes:
+- http
+swagger: "2.0"

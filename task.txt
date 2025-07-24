@@ -1,0 +1,5 @@
+swagger
+
+concurent OTP genrator.
+
+i want to add logic client with same number cant request many OTP at given time

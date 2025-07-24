@@ -1,3 +1,10 @@
+// @title OTP Verification API
+// @version 1.0
+// @description API for sending and verifying OTP codes
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+
 package main
 
 import (
@@ -7,9 +14,11 @@ import (
 	"OTP/internal/database"
 	"OTP/internal/handlers"
 	"OTP/internal/middlewares"
+	_ "OTP/docs"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/swaggo/http-swagger"
 )
 
 func main() {
@@ -27,6 +36,10 @@ func main() {
 
     // Protect /users with admin auth middleware
 	r.Handle("/users", middlewares.AdminAuth(http.HandlerFunc(handlers.GetAllUsers))).Methods("GET")
+
+
+	// Add this route to serve Swagger UI
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
     log.Println("Server running at :8080")
     log.Fatal(http.ListenAndServe(":8080", r))
