@@ -7,8 +7,8 @@ services:
     depends_on:
       - mongo
       - redis
-    # volumes:
-    #   - .:/app
+    volumes:
+      - .:/app
     environment:
       - JWT_SECRET=secret
       - MONGO_URI=mongodb://mongo:27017
