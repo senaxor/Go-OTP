@@ -25,7 +25,13 @@ Go-OTP is a high-performance, containerized One-Time Password (OTP) generator an
 
 ### 1. Build & Start Containers:
 ```bash
-docker-compose up --build
+swag init   --dir ./cmd/server,./internal/database,./internal/handlers,./internal/models
+```
+```bash
+docker-compose -f docker-compose.yml build --no-cache
+```
+```bash
+docker-compose up
 ```
 
 ## Swagger
