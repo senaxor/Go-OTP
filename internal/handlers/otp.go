@@ -60,7 +60,18 @@ func RequestOTP(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-
+// VerifyOTP godoc
+// @Summary Verify OTP
+// @Description Verify the OTP sent to the user's phone and return a JWT token if valid
+// @Tags OTP
+// @Accept  json
+// @Produce  json
+// @Param request body OTPVerifyRequest true "Phone number and OTP code"
+// @Success 200 {object} map[string]string "Returns JWT token"
+// @Failure 400 {object} map[string]string "Invalid request body"
+// @Failure 401 {object} map[string]string "Invalid or expired OTP"
+// @Failure 500 {object} map[string]string "Server or Redis/DB error"
+// @Router /otp/verify [post]
 func VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	var req OTPVerifyRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

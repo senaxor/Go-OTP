@@ -5,6 +5,13 @@ definitions:
       phone:
         type: string
     type: object
+  handlers.OTPVerifyRequest:
+    properties:
+      otp:
+        type: string
+      phone:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -40,6 +47,49 @@ paths:
               type: string
             type: object
       summary: Request an OTP
+      tags:
+      - OTP
+  /otp/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verify the OTP sent to the user's phone and return a JWT token
+        if valid
+      parameters:
+      - description: Phone number and OTP code
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.OTPVerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns JWT token
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request body
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Invalid or expired OTP
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server or Redis/DB error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Verify OTP
       tags:
       - OTP
 schemes:

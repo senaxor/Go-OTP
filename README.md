@@ -23,7 +23,7 @@ Go-OTP is a high-performance, containerized One-Time Password (OTP) generator an
 
 ## 🛠️ Getting Started
 
-### 1. Start MongoDB container:
+### 1. Build & Start Containers:
 ```bash
 docker-compose up --build
 ```

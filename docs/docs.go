@@ -60,12 +60,87 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/otp/verify": {
+            "post": {
+                "description": "Verify the OTP sent to the user's phone and return a JWT token if valid",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OTP"
+                ],
+                "summary": "Verify OTP",
+                "parameters": [
+                    {
+                        "description": "Phone number and OTP code",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.OTPVerifyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns JWT token",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid or expired OTP",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server or Redis/DB error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "handlers.OTPRequest": {
             "type": "object",
             "properties": {
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.OTPVerifyRequest": {
+            "type": "object",
+            "properties": {
+                "otp": {
+                    "type": "string"
+                },
                 "phone": {
                     "type": "string"
                 }
