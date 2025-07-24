@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
+	"OTP/internal/database"
 	"OTP/internal/models"
 	"OTP/internal/utils"
+	
+	"github.com/redis/go-redis/v9"
 )
 
 var otpStore = make(map[string]string) // In-memory OTP store (use Redis in production)
@@ -29,7 +33,14 @@ func RequestOTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	otp := utils.GenerateOTP()
-	otpStore[req.Phone] = otp
+	
+	// Save OTP in Redis with 2-minute expiry
+	err := database.RDB.Set(database.Ctx, req.Phone, otp, 2*time.Minute).Err()
+	if err != nil {
+		log.Printf("Redis SET error: %v\n", err)
+		http.Error(w, "Failed to store OTP", http.StatusInternalServerError)
+		return
+	}
 
 	// Log the OTP to simulate "sending"
 	log.Printf("Generated OTP for %s: %s\n", req.Phone, otp)
@@ -48,13 +59,21 @@ func VerifyOTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expectedOTP, exists := otpStore[req.Phone]
-	if !exists || expectedOTP != req.OTP {
+	// Fetch OTP from Redis
+	expectedOTP, err := database.RDB.Get(database.Ctx, req.Phone).Result()
+	if err == redis.Nil || expectedOTP != req.OTP {
 		http.Error(w, "Invalid OTP", http.StatusUnauthorized)
+		return
+	} else if err != nil {
+		log.Printf("Redis GET error: %v\n", err)
+		http.Error(w, "Redis error", http.StatusInternalServerError)
 		return
 	}
 
+	// Clean up used OTP
+	_ = database.RDB.Del(database.Ctx, req.Phone).Err()
 	log.Printf(req.Phone)
+
 	user, err := models.FindOrCreateUser(req.Phone)
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
@@ -66,8 +85,6 @@ func VerifyOTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Token generation failed", http.StatusInternalServerError)
 		return
 	}
-
-	delete(otpStore, req.Phone) // Clean up used OTP
 
 	json.NewEncoder(w).Encode(map[string]string{
 		"token": token,

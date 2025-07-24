@@ -6,13 +6,21 @@ services:
       - "8080:8080"
     depends_on:
       - mongo
+      - redis
     volumes:
       - .:/app
     environment:
       - JWT_SECRET=secret
       - MONGO_URI=mongodb://mongo:27017
+      - REDIS_ADDR=redis:6379
 
   mongo:
     image: mongo
     ports:
       - "27017:27017"
+
+  redis:
+    image: redis
+    ports:
+      - "6380:6379"
+

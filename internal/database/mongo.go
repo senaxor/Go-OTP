@@ -14,7 +14,7 @@ import (
 
 var DB *mongo.Database
 
-func InitDB() {
+func InitMongo() {
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 

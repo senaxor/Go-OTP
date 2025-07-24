@@ -17,7 +17,8 @@ func main() {
 		log.Println("No .env file found or failed to load it")
 	}
 
-    database.InitDB()
+    database.InitMongo()
+    database.InitRedis()
     r := mux.NewRouter()
 
     // OTP Endpoints
